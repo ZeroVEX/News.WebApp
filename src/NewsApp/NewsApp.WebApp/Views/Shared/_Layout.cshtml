@@ -1,0 +1,51 @@
+﻿@using NewsApp.DomainModel
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"]</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link href="~/lib/font-awesome/css/all.css" rel="stylesheet" />
+    @await RenderSectionAsync("Styles", false)
+    <script src="~/lib/jquery/jquery.min.js"></script>
+    <script src="~/lib/jquery-validate/jquery.validate.min.js"></script>
+    <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    @await RenderSectionAsync("Scripts", false)
+</head>
+<body>
+    @if (User.Identity != null && User.Identity.IsAuthenticated)
+    {
+        <div class="container">
+            <nav class="navbar navbar-expand-lg navbar-light bg-light justify-content-between">
+                <div class="collapse navbar-collapse">
+                    <a asp-action="Index" asp-controller="HomePage" class="navbar-brand btn btn-light">Home page</a>
+                    @if (User.IsInRole(RoleNames.Admin))
+                    {
+                        <a asp-action="Index" asp-controller="News" class="navbar-brand btn btn-light">Add news</a>
+                        <a asp-action="Index" asp-controller="Users" class="navbar-brand btn btn-light">Users</a>
+                        <a asp-action="Show" asp-controller="News" class="navbar-brand btn btn-light">News editing panel</a>
+                    }
+                </div>
+                <form class="form-inline" method="post" asp-controller="Account" asp-action="Logout">
+                    <input class="navbar-brand btn btn-light" type="submit" value="Logout" />
+                </form>
+            </nav>
+        </div>
+     }
+     else
+     {
+        <div class="container">
+            <nav class="navbar navbar-expand-lg navbar-light bg-light">
+                <a asp-action="Register" asp-controller="Registration" class="navbar-brand btn btn-light">Registration</a>
+                <a asp-action="Login" asp-controller="Account" class="navbar-brand btn btn-light">Login</a>
+            </nav>
+        </div>
+     }
+    <div class="container">
+        @RenderBody()
+    </div>
+</body>
+</html>

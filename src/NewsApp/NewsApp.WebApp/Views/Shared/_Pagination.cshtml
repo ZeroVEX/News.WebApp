@@ -1,0 +1,48 @@
+﻿@model NewsApp.WebApp.ViewModels.Pagination.PaginationViewModel
+
+@if (Model.TotalPages == 0)
+{
+    <a asp-action="@Model.Action"
+       asp-route-filter="@(Model.Filter)">
+        <i class="fas fa-angle-double-right fa-2x float-right"></i>
+    </a>
+}
+else
+{
+    <a asp-action="@Model.Action"
+       asp-route-page="@(Model.TotalPages)"
+       asp-route-filter="@(Model.Filter)">
+        <i class="fas fa-angle-double-right fa-2x float-right"></i>
+    </a>
+}
+
+@if (Model.HasNextPage)
+{
+    <a asp-action="@Model.Action"
+       asp-route-page="@(Model.PageNumber + 1)"
+       asp-route-filter="@(Model.Filter)">
+        <i class="fas fa-angle-right fa-2x float-right"></i>
+    </a>
+}
+else
+{
+    <i class="fas fa-angle-right fa-2x float-right"></i>
+}
+
+@if (Model.HasPreviousPage)
+{
+    <a asp-action="@Model.Action"
+       asp-route-page="@(Model.PageNumber - 1)"
+       asp-route-filter="@(Model.Filter)">
+        <i class="fas fa-angle-left fa-2x float-right"></i>
+    </a>
+}
+else
+{
+    <i class="fas fa-angle-left fa-2x float-right"></i>
+}
+
+<a asp-action="@Model.Action"
+   asp-route-filter="@(Model.Filter)">
+    <i class="fas fa-angle-double-left fa-2x float-right"></i>
+</a>

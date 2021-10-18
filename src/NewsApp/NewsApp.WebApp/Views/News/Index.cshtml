@@ -1,0 +1,11 @@
+﻿@using NewsApp.WebApp.Controllers
+@model NewsApp.WebApp.ViewModels.News.NewsManagementViewModel
+@{
+    Layout = "_Layout";
+    ViewData["Title"] = "Create news";
+}
+
+@{
+    Model.Action = nameof(NewsController.Create);
+}
+@await Html.PartialAsync("_NewsManagement", Model)

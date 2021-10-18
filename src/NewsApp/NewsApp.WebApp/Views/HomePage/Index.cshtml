@@ -1,0 +1,36 @@
+﻿@using NewsApp.WebApp.Controllers
+@using NewsApp.WebApp.ViewModels.Pagination
+@model NewsApp.WebApp.ViewModels.ItemsSearchViewModel<NewsApp.WebApp.ViewModels.News.NewsManagementViewModel>
+@{
+    Layout = "_Layout";
+    ViewData["Title"] = "Home page";
+}
+
+<form method="get">
+    <div class="form-inline form-group fa-pull-right">
+        <label class="mt-2">Title: </label>
+        <input name="filter" class="form-control ml-2 mt-2" value="@Model.Filter" />
+        <input type="submit" value="Search" class="btn mt-2" />
+    </div>
+</form>
+<br />
+<div class="mt-5">
+    @foreach (var item in Model.ItemsPage.Items)
+    {
+        <form class="mt-3 p-3 text-center border border-dark">
+            <div class="mt-3">
+                <h1>@item.Title</h1>
+            </div>
+            <div class="mt-3">
+                <h3>@item.Subtitle</h3>
+            </div>
+            <div class="mt-3">
+                <textarea type="text" readonly class="form-control-plaintext" rows="8">@item.Text</textarea>
+            </div>
+        </form>
+    }
+</div>
+
+<label>Number of news: @Model.ItemsPage.Count</label>
+
+@await Html.PartialAsync("_Pagination", new PaginationViewModel(Model.ItemsPage.PageNumber, Model.ItemsPage.TotalPages, Model.Filter, nameof(HomePageController.Index)))

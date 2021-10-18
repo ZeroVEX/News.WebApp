@@ -1,0 +1,47 @@
+﻿@using NewsApp.WebApp.Controllers
+@using NewsApp.WebApp.ViewModels
+@using NewsApp.WebApp.ViewModels.Pagination
+@model NewsApp.WebApp.ViewModels.ItemsSearchViewModel<NewsApp.WebApp.ViewModels.News.NewsViewModel>
+@{
+    Layout = "_Layout";
+    ViewData["Title"] = "News editing panel";
+}
+
+<form method="get">
+    <div class="form-inline form-group fa-pull-right">
+        <label class="mt-2">Title: </label>
+        <input name="filter" class="form-control ml-2 mt-2" value="@Model.Filter" />
+        <input type="submit" value="Search" class="btn mt-2" />
+    </div>
+</form>
+
+<table class="table">
+    <tr>
+        <th>Title</th>
+        <th>Change date</th>
+        <th>Creator</th>
+        <th></th>
+    </tr>
+    @foreach (var item in Model.ItemsPage.Items)
+    {
+        <tr>
+            <td>@item.Title</td>
+            <td>@item.ChangeDate.ToShortDateString()</td>
+            <td>@item.Creator</td>
+            <td>
+                <a class="btn btn-sm btn-primary" asp-action="Edit" asp-controller="News" asp-route-id="@item.Id">
+                    Change
+                </a>
+                <button type="button" class="btn btn-sm btn-danger" data-toggle="modal" data-target="#confirmationDialog-@item.Id">
+                    Delete
+                </button>
+
+                @await Html.PartialAsync("_DeletionPopup", new DialogViewModel(item.Id, Url.Action("Delete", "News", new { id = item.Id })))
+            </td>
+        </tr>
+    }
+</table>
+
+<label>Number of news: @Model.ItemsPage.Count</label>
+
+@await Html.PartialAsync("_Pagination", new PaginationViewModel(Model.ItemsPage.PageNumber, Model.ItemsPage.TotalPages, Model.Filter, nameof(NewsController.Show)))
