@@ -1,4 +1,7 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using NewsApp.WebApp.Controllers;
+using System.ComponentModel.DataAnnotations;
 
 namespace NewsApp.WebApp.ViewModels.News
 {
@@ -20,6 +23,11 @@ namespace NewsApp.WebApp.ViewModels.News
         [StringLength(DomainModel.News.TextMaxLength, ErrorMessage = "MaxLength")]
         [Display(Name = "Text")]
         public string Text { get; set; }
+
+        [Display(Name = "Image")]
+        public IFormFile Image { get; set; }
+
+        public byte[] ImageData { get; set; }
 
         public string Action { get; set; }
     }

@@ -117,22 +117,7 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="Image" xml:space="preserve">
-    <value>Изображение</value>
-  </data>
-  <data name="MaxLength" xml:space="preserve">
-    <value>Превышено максимальное количество символов</value>
-  </data>
-  <data name="RequiredField" xml:space="preserve">
-    <value>Обязательное поле</value>
-  </data>
-  <data name="Subtitle" xml:space="preserve">
-    <value>Подзаголовок</value>
-  </data>
-  <data name="Text" xml:space="preserve">
-    <value>Текст</value>
-  </data>
-  <data name="Title" xml:space="preserve">
-    <value>Заголовок</value>
+  <data name="SaveButton" xml:space="preserve">
+    <value>Save</value>
   </data>
 </root>

@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using NewsApp.DomainModel;
 using NewsApp.Foundation.Interfaces;
@@ -47,6 +46,10 @@ namespace NewsApp.Foundation.NewsServices
             news.Title = fromNews.Title;
             news.Subtitle = fromNews.Subtitle;
             news.Text = fromNews.Text;
+            if (fromNews.ImageData != null)
+            {
+                news.ImageData = fromNews.ImageData;
+            }
 
             await _unitOfWork.SaveAsync();
 
@@ -71,6 +74,13 @@ namespace NewsApp.Foundation.NewsServices
         public async Task<News> GetNewsByIdAsync(int id)
         {
             return await _unitOfWork.NewsRepository.GetByIdAsync(id);
+        }
+
+        public bool ChechImageFormat(string type)
+        {
+            var isFormatCorrect = type.EndsWith("jpeg") || type.EndsWith("png");
+
+            return isFormatCorrect;
         }
 
         private static HashSet<NewsManagementError> GetErrors(News news)

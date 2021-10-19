@@ -19,6 +19,8 @@ namespace NewsApp.DomainModel
 
         public DateTime ChangeDate { get; set; }
 
+        public byte[] ImageData { get; set; }
+
         public int? CreatorId { get; set; }
 
         public User Creator { get; set; }

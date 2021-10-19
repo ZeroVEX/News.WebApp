@@ -10,10 +10,10 @@ using NewsApp.WebApp.ViewModels.News;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Localization;
+using System.IO;
 
 namespace NewsApp.WebApp.Controllers
 {
-    [Authorize(Roles = RoleNames.Admin)]
     public class NewsController : Controller
     {
         private const int NewsPageSize = 3;
@@ -29,6 +29,7 @@ namespace NewsApp.WebApp.Controllers
         }
 
 
+        [Authorize(Roles = RoleNames.Admin)]
         public IActionResult Index()
         {
             var newsViewModel = new NewsManagementViewModel();
@@ -37,27 +38,42 @@ namespace NewsApp.WebApp.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = RoleNames.Admin)]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(NewsManagementViewModel model)
         {
             var news = GetNews(model);
             news.CreatorId = User.GetId();
-            var createNewsResult = await _newsManagementService.CreateNewsAsync(news);
 
-            if (createNewsResult.IsSuccessful)
+            if (model.Image != null)
             {
-                return RedirectToAction("Index");
+                var isFormatCorrect = _newsManagementService.ChechImageFormat(model.Image.ContentType);
+                if (!isFormatCorrect)
+                {
+                    ModelState.AddModelError(nameof(NewsManagementViewModel.Image), _localizer["WrongFormat"]);
+                }
             }
 
-            foreach (var error in createNewsResult.Errors)
+            if (ModelState.IsValid)
             {
-                var (key, message) = GetErrorMessage(error);
-                ModelState.AddModelError(key, message);
+                var createNewsResult = await _newsManagementService.CreateNewsAsync(news);
+
+                if (createNewsResult.IsSuccessful)
+                {
+                    return RedirectToAction("Index", "HomePage");
+                }
+
+                foreach (var error in createNewsResult.Errors)
+                {
+                    var (key, message) = GetErrorMessage(error);
+                    ModelState.AddModelError(key, message);
+                }
             }
 
             return View("Index", model);
         }
 
+        [Authorize(Roles = RoleNames.Admin)]
         public async Task<IActionResult> Show(string filter, int page = 1)
         {
             var newsPage = await _newsManagementService.GetNewsPageAsync((page - 1) * NewsPageSize, NewsPageSize, filter);
@@ -76,6 +92,27 @@ namespace NewsApp.WebApp.Controllers
             return View(showNewsViewModel);
         }
 
+        [Authorize]
+        public async Task<IActionResult> ShowOne(int id)
+        {
+            var news = await _newsManagementService.GetNewsByIdAsync(id);
+            if (news == null)
+            {
+                return NotFound();
+            }
+
+            var newsManagementViewModel = new NewsManagementViewModel
+            {
+                Title = news.Title,
+                Subtitle = news.Subtitle,
+                Text = news.Text,
+                ImageData = news.ImageData
+            };
+
+            return View(newsManagementViewModel);
+        }
+
+        [Authorize(Roles = RoleNames.Admin)]
         public async Task<IActionResult> Edit(int id)
         {
             var news = await _newsManagementService.GetNewsByIdAsync(id);
@@ -89,12 +126,14 @@ namespace NewsApp.WebApp.Controllers
                 Title = news.Title,
                 Subtitle = news.Subtitle,
                 Text = news.Text,
+                ImageData = news.ImageData
             };
 
             return View(newsManagementViewModel);
         }
 
         [HttpPost]
+        [Authorize(Roles = RoleNames.Admin)]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(NewsManagementViewModel model)
         {
@@ -104,24 +143,37 @@ namespace NewsApp.WebApp.Controllers
                 return NotFound();
             }
 
-            var fromNews = GetNews(model);
-            var updateNewsResult = await _newsManagementService.UpdateNewsAsync(news, fromNews);
-
-            if (updateNewsResult.IsSuccessful)
+            if (model.Image != null)
             {
-                return RedirectToAction("Show");
+                var isFormatCorrect = _newsManagementService.ChechImageFormat(model.Image.ContentType);
+                if (!isFormatCorrect)
+                {
+                    ModelState.AddModelError(nameof(NewsManagementViewModel.Image), _localizer["WrongFormat"]);
+                }
             }
 
-            foreach (var error in updateNewsResult.Errors)
+            if (ModelState.IsValid)
             {
-                var (key, message) = GetErrorMessage(error);
-                ModelState.AddModelError(key, message);
+                var fromNews = GetNews(model);
+                var updateNewsResult = await _newsManagementService.UpdateNewsAsync(news, fromNews);
+
+                if (updateNewsResult.IsSuccessful)
+                {
+                    return RedirectToAction("Show");
+                }
+
+                foreach (var error in updateNewsResult.Errors)
+                {
+                    var (key, message) = GetErrorMessage(error);
+                    ModelState.AddModelError(key, message);
+                }
             }
 
             return View(model);
         }
 
         [HttpPost]
+        [Authorize(Roles = RoleNames.Admin)]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Delete(int id)
         {
@@ -146,6 +198,16 @@ namespace NewsApp.WebApp.Controllers
                 Text = model.Text,
             };
 
+            if (model.Image != null)
+            {
+                byte[] imageData = null;
+                using (var binaryReader = new BinaryReader(model.Image.OpenReadStream()))
+                {
+                    imageData = binaryReader.ReadBytes((int)model.Image.Length);
+                }
+                news.ImageData = imageData;
+            }
+
             return news;
         }
 
@@ -153,12 +215,12 @@ namespace NewsApp.WebApp.Controllers
         {
             return value switch
             {
-                NewsManagementError.EmptyNewsTitle => ("", _localizer["EmptyNewsTitle"]),
-                NewsManagementError.EmptyNewsSubtitle => ("", _localizer["EmptyNewsSubtitle"]),
-                NewsManagementError.EmptyNewsText => ("", _localizer["EmptyNewsText"]),
-                NewsManagementError.NewsTitleTooLong => ("", _localizer["NewsTitleTooLong"]),
-                NewsManagementError.NewsSubtitleTooLong => ("", _localizer["NewsSubtitleTooLong"]),
-                NewsManagementError.NewsTextTooLong => ("", _localizer["NewsTextTooLong"]),
+                NewsManagementError.EmptyNewsTitle => (nameof(NewsManagementViewModel.Title), _localizer["EmptyNewsTitle"]),
+                NewsManagementError.EmptyNewsSubtitle => (nameof(NewsManagementViewModel.Subtitle), _localizer["EmptyNewsSubtitle"]),
+                NewsManagementError.EmptyNewsText => (nameof(NewsManagementViewModel.Text), _localizer["EmptyNewsText"]),
+                NewsManagementError.NewsTitleTooLong => (nameof(NewsManagementViewModel.Title), _localizer["NewsTitleTooLong"]),
+                NewsManagementError.NewsSubtitleTooLong => (nameof(NewsManagementViewModel.Subtitle), _localizer["NewsSubtitleTooLong"]),
+                NewsManagementError.NewsTextTooLong => (nameof(NewsManagementViewModel.Text), _localizer["NewsTextTooLong"]),
                 _ => ("", "Unknown error")
             };
         }

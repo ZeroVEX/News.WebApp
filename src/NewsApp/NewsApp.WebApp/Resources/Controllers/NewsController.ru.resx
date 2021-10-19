@@ -135,4 +135,7 @@
   <data name="NewsTitleTooLong" xml:space="preserve">
     <value>Заголовок новости слишком длинный</value>
   </data>
+  <data name="WrongFormat" xml:space="preserve">
+    <value>Неправильный формат изображения</value>
+  </data>
 </root>

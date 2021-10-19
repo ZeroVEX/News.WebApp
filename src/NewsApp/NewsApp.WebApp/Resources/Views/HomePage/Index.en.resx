@@ -129,4 +129,7 @@
   <data name="Title" xml:space="preserve">
     <value>Home page</value>
   </data>
+  <data name="ViewNews" xml:space="preserve">
+    <value>View news</value>
+  </data>
 </root>

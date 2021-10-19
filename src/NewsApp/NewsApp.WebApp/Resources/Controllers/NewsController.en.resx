@@ -135,4 +135,7 @@
   <data name="NewsTitleTooLong" xml:space="preserve">
     <value>News title is too long</value>
   </data>
+  <data name="WrongFormat" xml:space="preserve">
+    <value>Wrong image format</value>
+  </data>
 </root>

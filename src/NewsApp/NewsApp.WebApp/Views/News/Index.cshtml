@@ -8,4 +8,8 @@
 @{
     Model.Action = nameof(NewsController.Create);
 }
+@section Styles
+{
+    <link href="~/NewsStyle.css" rel="stylesheet" />
+}
 @await Html.PartialAsync("_NewsManagement", Model)

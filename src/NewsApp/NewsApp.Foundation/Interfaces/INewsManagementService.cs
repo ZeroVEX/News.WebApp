@@ -15,5 +15,7 @@ namespace NewsApp.Foundation.Interfaces
         Task<EntityPage<News>> GetNewsPageAsync(int skip, int take, string filter);
 
         Task<News> GetNewsByIdAsync(int id);
+
+        bool ChechImageFormat(string type);
     }
 }

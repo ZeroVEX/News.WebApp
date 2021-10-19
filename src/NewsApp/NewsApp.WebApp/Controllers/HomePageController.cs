@@ -32,8 +32,8 @@ namespace NewsApp.WebApp.Controllers
             {
                 Id = n.Id,
                 Title = n.Title,
-                Subtitle = n.Subtitle,
-                Text = n.Text
+                Text = n.Text,
+                ImageData = n.ImageData
             }).ToList();
 
             var pageViewModel = new ItemsPageViewModel<NewsManagementViewModel>(newsViewModels, newsPage.Count, page, NewsPageSize);
