@@ -4,18 +4,18 @@
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="ModalLabel">Confirm deletion</h5>
+                <h5 class="modal-title" id="ModalLabel">@Localizer["ConfirmDeletion"]</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
             <div class="modal-body">
-                Are you sure you want to delete this record?
+                @Localizer["ConfirmationText"]
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">@Localizer["Close"]</button>
                 <form action="@Model.ActionUrl" asp-antiforgery="true" method="post">
-                    <input type="submit" class="btn btn-danger" value="Delete" />
+                    <input type="submit" class="btn btn-danger" value="@Localizer["Delete"]" />
                 </form>
             </div>
         </div>

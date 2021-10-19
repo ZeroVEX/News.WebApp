@@ -3,14 +3,14 @@
 @model NewsApp.WebApp.ViewModels.ItemsSearchViewModel<NewsApp.WebApp.ViewModels.News.NewsManagementViewModel>
 @{
     Layout = "_Layout";
-    ViewData["Title"] = "Home page";
+    ViewData["Title"] = Localizer["Title"];
 }
 
 <form method="get">
     <div class="form-inline form-group fa-pull-right">
-        <label class="mt-2">Title: </label>
+        <label class="mt-2">@Localizer["SearchTitleText"]: </label>
         <input name="filter" class="form-control ml-2 mt-2" value="@Model.Filter" />
-        <input type="submit" value="Search" class="btn mt-2" />
+        <input type="submit" value="@Localizer["SearchButtonText"]" class="btn mt-2" />
     </div>
 </form>
 <br />
@@ -31,6 +31,6 @@
     }
 </div>
 
-<label>Number of news: @Model.ItemsPage.Count</label>
+<label>@Localizer["NumberOfNews"]: @Model.ItemsPage.Count</label>
 
 @await Html.PartialAsync("_Pagination", new PaginationViewModel(Model.ItemsPage.PageNumber, Model.ItemsPage.TotalPages, Model.Filter, nameof(HomePageController.Index)))

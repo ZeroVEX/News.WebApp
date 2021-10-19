@@ -2,17 +2,20 @@
 using System.Threading.Tasks;
 using NewsApp.Foundation.Interfaces;
 using NewsApp.WebApp.ViewModels.Account;
+using Microsoft.Extensions.Localization;
 
 namespace NewsApp.WebApp.Controllers
 {
     public class AccountController : Controller
     {
         private readonly IAccountService _accountService;
+        private readonly IStringLocalizer<AccountController> _localizer;
 
 
-        public AccountController(IAccountService accountService)
+        public AccountController(IAccountService accountService, IStringLocalizer<AccountController> localizer)
         {
             _accountService = accountService;
+            _localizer = localizer;
         }
 
 
@@ -47,7 +50,7 @@ namespace NewsApp.WebApp.Controllers
                 return RedirectToAction("Index", "HomePage");
             }
 
-            ModelState.AddModelError("", "Wrong login or password");
+            ModelState.AddModelError("", _localizer["LoginError"]);
 
             return View(model);
         }

@@ -6,18 +6,18 @@ namespace NewsApp.WebApp.ViewModels.News
     {
         public int Id { get; set; }
 
-        [Required]
-        [StringLength(DomainModel.News.TitleMaxLength)]
+        [Required(ErrorMessage = "RequiredField")]
+        [StringLength(DomainModel.News.TitleMaxLength, ErrorMessage = "MaxLength")]
         [Display(Name = "Title")]
         public string Title { get; set; }
 
-        [Required]
-        [StringLength(DomainModel.News.SubtitleMaxLength)]
+        [Required(ErrorMessage = "RequiredField")]
+        [StringLength(DomainModel.News.SubtitleMaxLength, ErrorMessage = "MaxLength")]
         [Display(Name = "Subtitle")]
         public string Subtitle { get; set; }
 
-        [Required]
-        [StringLength(DomainModel.News.TextMaxLength)]
+        [Required(ErrorMessage = "RequiredField")]
+        [StringLength(DomainModel.News.TextMaxLength, ErrorMessage = "MaxLength")]
         [Display(Name = "Text")]
         public string Text { get; set; }
 

@@ -8,9 +8,9 @@ namespace NewsApp.WebApp.ViewModels.User
     {
         public int Id { get; set; }
 
-        [Required]
-        [StringLength(DomainModel.User.DisplayNameMaxLength)]
-        [Display(Name = "User name")]
+        [Required(ErrorMessage = "NameRequired")]
+        [StringLength(DomainModel.User.DisplayNameMaxLength, ErrorMessage = "MaxLength")]
+        [Display(Name = "UserName")]
         public string DisplayName { get; set; }
 
         public IReadOnlyCollection<string> UserRoles { get; set; }

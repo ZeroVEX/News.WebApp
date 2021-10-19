@@ -16,34 +16,33 @@
     @await RenderSectionAsync("Scripts", false)
 </head>
 <body>
-    @if (User.Identity != null && User.Identity.IsAuthenticated)
-    {
-        <div class="container">
+    <div class="container">
+        @if (User.Identity != null && User.Identity.IsAuthenticated)
+        {
             <nav class="navbar navbar-expand-lg navbar-light bg-light justify-content-between">
                 <div class="collapse navbar-collapse">
-                    <a asp-action="Index" asp-controller="HomePage" class="navbar-brand btn btn-light">Home page</a>
+                    <a asp-action="Index" asp-controller="HomePage" class="navbar-brand btn btn-light">@Localizer["HomePage"]</a>
                     @if (User.IsInRole(RoleNames.Admin))
                     {
-                        <a asp-action="Index" asp-controller="News" class="navbar-brand btn btn-light">Add news</a>
-                        <a asp-action="Index" asp-controller="Users" class="navbar-brand btn btn-light">Users</a>
-                        <a asp-action="Show" asp-controller="News" class="navbar-brand btn btn-light">News editing panel</a>
+                        <a asp-action="Index" asp-controller="News" class="navbar-brand btn btn-light">@Localizer["AddNews"]</a>
+                        <a asp-action="Index" asp-controller="Users" class="navbar-brand btn btn-light">@Localizer["Users"]</a>
+                        <a asp-action="Show" asp-controller="News" class="navbar-brand btn btn-light">@Localizer["NewsEditingPanel"]</a>
                     }
                 </div>
                 <form class="form-inline" method="post" asp-controller="Account" asp-action="Logout">
-                    <input class="navbar-brand btn btn-light" type="submit" value="Logout" />
+                    <input class="navbar-brand btn btn-light" type="submit" value="@Localizer["Logout"]" />
                 </form>
             </nav>
-        </div>
-     }
-     else
-     {
-        <div class="container">
+        }
+        else
+        {
             <nav class="navbar navbar-expand-lg navbar-light bg-light">
-                <a asp-action="Register" asp-controller="Registration" class="navbar-brand btn btn-light">Registration</a>
-                <a asp-action="Login" asp-controller="Account" class="navbar-brand btn btn-light">Login</a>
+                <a asp-action="Register" asp-controller="Registration" class="navbar-brand btn btn-light">@Localizer["Registration"]</a>
+                <a asp-action="Login" asp-controller="Account" class="navbar-brand btn btn-light">@Localizer["Login"]</a>
             </nav>
-        </div>
-     }
+        }
+        @await Html.PartialAsync("_SelectLanguagePartial")
+    </div>
     <div class="container">
         @RenderBody()
     </div>

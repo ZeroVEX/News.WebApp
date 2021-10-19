@@ -8,6 +8,7 @@ using NewsApp.WebApp.ViewModels.Pagination;
 using NewsApp.WebApp.ViewModels.User;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Localization;
 
 namespace NewsApp.WebApp.Controllers
 {
@@ -17,11 +18,13 @@ namespace NewsApp.WebApp.Controllers
         private const int UsersPageSize = 2;
 
         private readonly IUserManagementService _userManagementService;
+        private readonly IStringLocalizer<UsersController> _localizer;
 
 
-        public UsersController(IUserManagementService userManagementService)
+        public UsersController(IUserManagementService userManagementService, IStringLocalizer<UsersController> localizer)
         {
             _userManagementService = userManagementService;
+            _localizer = localizer;
         }
 
 
@@ -113,13 +116,13 @@ namespace NewsApp.WebApp.Controllers
             viewModel.AllRoles = await _userManagementService.GetAllRolesAsync();
         }
 
-        private static (string modelPropertyName, string message) GetErrorMessage(UpdateUserError value)
+        private (string modelPropertyName, string message) GetErrorMessage(UpdateUserError value)
         {
             return value switch
             {
-                UpdateUserError.DisplayNameIsEmpty => (nameof(EditUserViewModel.DisplayName), "Display name can't be empty"),
-                UpdateUserError.DisplayNameIsTooLong => (nameof(EditUserViewModel.DisplayName), "Display name is too long"),
-                UpdateUserError.EmptyRoles => (nameof(EditUserViewModel.UserRoles), "Users must have at least 1 role"),
+                UpdateUserError.DisplayNameIsEmpty => (nameof(EditUserViewModel.DisplayName), _localizer["DisplayNameIsEmpty"]),
+                UpdateUserError.DisplayNameIsTooLong => (nameof(EditUserViewModel.DisplayName), _localizer["DisplayNameIsTooLong"]),
+                UpdateUserError.EmptyRoles => (nameof(EditUserViewModel.UserRoles), _localizer["EmptyRoles"]),
                 _ => ("", "Unknown error")
             };
         }

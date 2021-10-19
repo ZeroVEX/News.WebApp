@@ -6,29 +6,29 @@ namespace NewsApp.WebApp.ViewModels.Account
 {
     public class RegisterViewModel
     {
-        [Required]
-        [StringLength(DomainModel.User.EmailMaxLength)]
-        [EmailAddress]
-        [Remote(nameof(RegistrationController.CheckEmail), "Registration", ErrorMessage = "Duplicate Email")]
+        [Required(ErrorMessage = "EmailRequired")]
+        [StringLength(DomainModel.User.EmailMaxLength, ErrorMessage = "MaxLength")]
+        [EmailAddress(ErrorMessage = "EmailAddress")]
+        [Remote(nameof(RegistrationController.CheckEmail), "Registration", ErrorMessage = "DuplicateEmail")]
         [Display(Name = "Email")]
         public string Email { get; set; }
 
-        [Required]
-        [StringLength(DomainModel.User.DisplayNameMaxLength)]
-        [Display(Name = "User name")]
+        [Required(ErrorMessage = "DisplayNameRequired")]
+        [StringLength(DomainModel.User.DisplayNameMaxLength, ErrorMessage = "MaxLength")]
+        [Display(Name = "UserName")]
         public string DisplayName { get; set; }
 
-        [Required]
-        [StringLength(DomainModel.User.PasswordMaxLength, MinimumLength = DomainModel.User.PasswordMinLength)]
+        [Required(ErrorMessage = "PasswordRequired")]
+        [StringLength(DomainModel.User.PasswordMaxLength, MinimumLength = DomainModel.User.PasswordMinLength, ErrorMessage = "MaxPasswordLength")]
         [DataType(DataType.Password)]
         [Display(Name = "Password")]
         public string Password { get; set; }
 
-        [Required]
-        [StringLength(DomainModel.User.PasswordMaxLength)]
-        [Compare(nameof(Password), ErrorMessage = "Passwords are not the same")]
+        [Required(ErrorMessage = "ConfirmPasswordRequired")]
+        [StringLength(DomainModel.User.PasswordMaxLength, ErrorMessage = "MaxLength")]
+        [Compare(nameof(Password), ErrorMessage = "ComparePasswords")]
         [DataType(DataType.Password)]
-        [Display(Name = "Confirm password")]
+        [Display(Name = "ConfirmPassword")]
         public string PasswordConfirm { get; set; }
     }
 }

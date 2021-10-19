@@ -14,6 +14,9 @@ using NewsApp.Repositories.Interfaces;
 using Microsoft.Extensions.Configuration;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
+using System.Globalization;
+using Microsoft.AspNetCore.Localization;
+using Microsoft.Extensions.Options;
 
 namespace NewsApp.WebApp
 {
@@ -32,7 +35,24 @@ namespace NewsApp.WebApp
         {
             var connection = _configuration.GetConnectionString("DefaultConnection");
 
-            services.AddControllersWithViews();
+            services.Configure<RequestLocalizationOptions>(options =>
+            {
+                var supportedCultures = new[]
+                {
+                    new CultureInfo("en"),
+                    new CultureInfo("ru"),
+                    new CultureInfo("be")
+                };
+                options.DefaultRequestCulture = new RequestCulture("en");
+                options.SupportedCultures = supportedCultures;
+                options.SupportedUICultures = supportedCultures;
+            });
+            services.AddLocalization(options => options.ResourcesPath = "Resources");
+
+            services.AddControllersWithViews()
+                .AddDataAnnotationsLocalization()
+                .AddViewLocalization();
+
             services.AddDbContext<NewsDbContext>(options => options.UseSqlServer(connection));
 
             services.AddIdentity<User, Role>(options =>
@@ -72,6 +92,9 @@ namespace NewsApp.WebApp
 
             app.UseRouting();
             app.UseStaticFiles();
+
+            var localizationOptions = app.ApplicationServices.GetService<IOptions<RequestLocalizationOptions>>().Value;
+            app.UseRequestLocalization(localizationOptions);
 
             app.UseAuthentication();
             app.UseAuthorization();

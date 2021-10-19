@@ -4,17 +4,20 @@ using NewsApp.DomainModel;
 using NewsApp.Foundation.Interfaces;
 using NewsApp.Foundation.UsersServices;
 using NewsApp.WebApp.ViewModels.Account;
+using Microsoft.Extensions.Localization;
 
 namespace NewsApp.WebApp.Controllers
 {
     public class RegistrationController : Controller
     {
         private readonly IAccountService _accountService;
+        private readonly IStringLocalizer<RegistrationController> _localizer;
 
 
-        public RegistrationController(IAccountService accountService)
+        public RegistrationController(IAccountService accountService, IStringLocalizer<RegistrationController> localizer)
         {
             _accountService = accountService;
+            _localizer = localizer;
         }
 
 
@@ -65,15 +68,15 @@ namespace NewsApp.WebApp.Controllers
         }
 
 
-        private static (string modelPropertyName, string message) GetErrorMessage(RegistrationError value)
+        private (string modelPropertyName, string message) GetErrorMessage(RegistrationError value)
         {
             return value switch
             {
-                RegistrationError.InvalidEmail => (nameof(RegisterViewModel.Email), "Invalid email"),
-                RegistrationError.DuplicateEmail => (nameof(RegisterViewModel.Email), "Email is already used"),
-                RegistrationError.PasswordTooShort => (nameof(RegisterViewModel.Password), "Password too short"),
-                RegistrationError.PasswordTooLong => (nameof(RegisterViewModel.Password), "Password too long"),
-                RegistrationError.DisplayNameTooLong => (nameof(RegisterViewModel.DisplayName), "Display name too long"),
+                RegistrationError.InvalidEmail => (nameof(RegisterViewModel.Email), _localizer["InvalidEmail"]),
+                RegistrationError.DuplicateEmail => (nameof(RegisterViewModel.Email), _localizer["DuplicateEmail"]),
+                RegistrationError.PasswordTooShort => (nameof(RegisterViewModel.Password), _localizer["PasswordTooShort"]),
+                RegistrationError.PasswordTooLong => (nameof(RegisterViewModel.Password), _localizer["PasswordTooLong"]),
+                RegistrationError.DisplayNameTooLong => (nameof(RegisterViewModel.DisplayName), _localizer["DisplayNameTooLong"]),
                 _ => ("", "Unknown error")
             };
         }

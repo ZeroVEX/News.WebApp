@@ -9,6 +9,7 @@ using NewsApp.WebApp.ViewModels.Pagination;
 using NewsApp.WebApp.ViewModels.News;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Localization;
 
 namespace NewsApp.WebApp.Controllers
 {
@@ -18,11 +19,13 @@ namespace NewsApp.WebApp.Controllers
         private const int NewsPageSize = 3;
 
         private readonly INewsManagementService _newsManagementService;
+        private readonly IStringLocalizer<NewsController> _localizer;
 
 
-        public NewsController(INewsManagementService newsManagementService)
+        public NewsController(INewsManagementService newsManagementService, IStringLocalizer<NewsController> localizer)
         {
             _newsManagementService = newsManagementService;
+            _localizer = localizer;
         }
 
 
@@ -146,16 +149,16 @@ namespace NewsApp.WebApp.Controllers
             return news;
         }
 
-        private static (string modelPropertyName, string message) GetErrorMessage(NewsManagementError value)
+        private (string modelPropertyName, string message) GetErrorMessage(NewsManagementError value)
         {
             return value switch
             {
-                NewsManagementError.EmptyNewsTitle => ("", "News title can't be empty"),
-                NewsManagementError.EmptyNewsSubtitle => ("", "News subtitle can't be empty"),
-                NewsManagementError.EmptyNewsText => ("", "News text can't be empty"),
-                NewsManagementError.NewsTitleTooLong => ("", "News title is too long"),
-                NewsManagementError.NewsSubtitleTooLong => ("", "News subtitle is too long"),
-                NewsManagementError.NewsTextTooLong => ("", "News text is too long"),
+                NewsManagementError.EmptyNewsTitle => ("", _localizer["EmptyNewsTitle"]),
+                NewsManagementError.EmptyNewsSubtitle => ("", _localizer["EmptyNewsSubtitle"]),
+                NewsManagementError.EmptyNewsText => ("", _localizer["EmptyNewsText"]),
+                NewsManagementError.NewsTitleTooLong => ("", _localizer["NewsTitleTooLong"]),
+                NewsManagementError.NewsSubtitleTooLong => ("", _localizer["NewsSubtitleTooLong"]),
+                NewsManagementError.NewsTextTooLong => ("", _localizer["NewsTextTooLong"]),
                 _ => ("", "Unknown error")
             };
         }
